@@ -1,0 +1,213 @@
+/* Общие стили стартового меню — гибридный стиль A+D */
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('fonts/pressstart2p-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('fonts/pressstart2p-400-latin.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('fonts/pixelifysans-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('fonts/pixelifysans-400-latin.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Handjet';
+  src: url('fonts/handjet-300-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Handjet';
+  src: url('fonts/handjet-300-latin.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --gold: #ffd9a8;
+  --gold-dim: #c9a064;
+  --ink: #cfd4e0;
+  --ink-dim: #8b91a0;
+  --glow: 0 0 18px rgba(255, 150, 60, .35);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: #0b0c10;
+  color: var(--ink);
+  font-family: 'Pixelify Sans', system-ui, sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  animation: drift 30s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to { transform: scale(1.055) translate3d(-10px, -6px, 0); }
+}
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 40%, transparent 40%, rgba(5, 6, 10, .72) 100%),
+    linear-gradient(180deg, rgba(5, 6, 10, .35), transparent 22%, transparent 78%, rgba(5, 6, 10, .6));
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .14;
+  background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .55) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+/* панель и кнопки — на реальных ассетах из public/assets/jrpg */
+.panel {
+  background: url('../../public/assets/jrpg/gui/panel.png') center / 100% 100% no-repeat;
+}
+
+.dialog-panel {
+  background: url('../../public/assets/jrpg/gui/dialogue.png') center / 100% 100% no-repeat;
+}
+
+.mbtn {
+  position: relative;
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 13px 20px;
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--ink);
+  background: url('../../public/assets/jrpg/gui/button.png') center / 100% 100% no-repeat;
+  cursor: pointer;
+  transition: color .15s, filter .15s, transform .06s;
+}
+
+.mbtn:hover,
+.mbtn.sel {
+  color: var(--gold);
+  filter: brightness(1.22) drop-shadow(0 0 10px rgba(255, 140, 50, .35));
+}
+
+.mbtn:active,
+.mbtn.pressed {
+  transform: translateY(1px);
+  background-image: url('../../public/assets/jrpg/gui/button_pressed.png');
+  filter: brightness(1.35) drop-shadow(0 0 14px rgba(255, 140, 50, .5));
+}
+
+.mbtn::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  transform: rotate(45deg) scale(0);
+  background: var(--gold);
+  box-shadow: var(--glow);
+  transition: transform .15s;
+}
+
+.mbtn:hover::before,
+.mbtn.sel::before { transform: rotate(45deg) scale(1); }
+
+.mbtn small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: var(--ink-dim);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.mbtn:hover small,
+.mbtn.sel small { color: var(--gold-dim); }
+
+.game-title {
+  font-family: 'Press Start 2P', monospace;
+  color: #ece5d8;
+  line-height: 1.35;
+  letter-spacing: 2px;
+  text-shadow:
+    0 3px 0 #1a1410,
+    0 6px 18px rgba(0, 0, 0, .85),
+    0 0 30px rgba(255, 140, 50, .18);
+}
+
+.game-title .accent { color: var(--gold); }
+
+.tagline {
+  font-family: 'Handjet', sans-serif;
+  font-weight: 300;
+  color: var(--ink-dim);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.version {
+  position: fixed;
+  left: 22px;
+  bottom: 16px;
+  font-family: 'Handjet', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #6d7382;
+}
+
+.hint {
+  position: fixed;
+  right: 22px;
+  bottom: 16px;
+  font-family: 'Handjet', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #6d7382;
+}
+
+/* угольки */
+.ember {
+  position: fixed;
+  bottom: -8px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffd27a, #ff8a2a 60%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  animation: rise linear infinite;
+  box-shadow: 0 0 6px rgba(255, 150, 50, .8);
+}
+
+@keyframes rise {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  8% { opacity: .9; }
+  60% { opacity: .7; }
+  100% { transform: translate3d(var(--dx, 20px), -72vh, 0); opacity: 0; }
+}

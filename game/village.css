@@ -1,0 +1,207 @@
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('../public/assets/fonts/pressstart2p-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('../public/assets/fonts/pressstart2p-400-latin.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('../public/assets/fonts/pixelifysans-400-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pixelify Sans';
+  src: url('../public/assets/fonts/pixelifysans-400-latin.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Handjet';
+  src: url('../public/assets/fonts/handjet-300-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Handjet';
+  src: url('../public/assets/fonts/handjet-300-latin.woff2') format('woff2');
+  font-display: swap;
+}
+
+:root {
+  --gold: #ffd9a8;
+  --gold-dim: #c9a064;
+  --ink: #d9dee8;
+  --ink-dim: #8b91a0;
+  --panel: rgba(8, 10, 16, 0.9);
+  --line: rgba(201, 160, 100, 0.38);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: #05060a;
+  color: var(--ink);
+  font-family: 'Pixelify Sans', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#game-wrap { position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(120% 100% at 50% 0%, #0b0d14, #04050a); }
+#game {
+  width: min(100vw, calc(100vh * 1.5556));
+  height: auto;
+  max-height: 100vh;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #000;
+  box-shadow: 0 0 80px rgba(0,0,0,.8);
+}
+
+#hud {
+  position: fixed;
+  top: 14px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+}
+.hud-left, .hud-right {
+  padding: 10px 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+.hud-area { font-family: 'Press Start 2P', monospace; font-size: 13px; color: var(--gold); letter-spacing: 1px; }
+.hud-sub { margin-top: 5px; font-family: 'Handjet', sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--ink-dim); text-transform: uppercase; }
+.hud-right { text-align: right; }
+.hud-gold { font-size: 17px; color: var(--gold); }
+.hud-inv { margin-top: 4px; font-family: 'Handjet', sans-serif; font-size: 12px; letter-spacing: 2px; color: var(--ink-dim); }
+
+#back,
+#editor {
+  position: fixed;
+  left: 18px;
+  bottom: 16px;
+  z-index: 20;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: 'Handjet', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+#back:hover { color: var(--gold); border-color: rgba(255,190,100,.6); }
+#editor { left: 118px; }
+#editor:hover { color: var(--gold); border-color: rgba(255,190,100,.6); }
+
+#prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  z-index: 15;
+  padding: 10px 18px;
+  background: rgba(8,10,16,.88);
+  border: 1px solid var(--line);
+  color: var(--gold);
+  font-family: 'Handjet', sans-serif;
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+#prompt.hidden, #toast.hidden, #panel.hidden { display: none; }
+
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 12px 22px;
+  background: rgba(8,10,16,.92);
+  border: 1px solid var(--line);
+  color: var(--gold-hi, #fff0cd);
+  font-family: 'Handjet', sans-serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 12px 40px rgba(0,0,0,.6);
+}
+
+#panel {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  background: rgba(3,4,8,.55);
+  backdrop-filter: blur(3px);
+}
+#panel-box {
+  width: min(680px, 92vw);
+  max-height: 82vh;
+  overflow: auto;
+  padding: 26px 28px 24px;
+  background:
+    linear-gradient(180deg, rgba(10,12,18,.96), rgba(6,7,11,.94)),
+    url('../public/assets/jrpg/gui/panel.png') center / 100% 100% no-repeat;
+  border: 1px solid var(--line);
+  clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+  box-shadow: 0 30px 90px rgba(0,0,0,.75);
+}
+#panel-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+#panel-body { color: var(--ink); }
+
+.shop-list { display: grid; gap: 10px; }
+.shop-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(201,160,100,.22);
+  background: rgba(14,16,22,.65);
+}
+.shop-item img { width: 44px; height: 44px; image-rendering: pixelated; }
+.shop-name { font-size: 16px; color: var(--ink); }
+.shop-desc { margin-top: 3px; font-family: 'Handjet', sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--ink-dim); }
+.shop-price { color: var(--gold); font-size: 15px; white-space: nowrap; }
+.shop-owned { font-family: 'Handjet', sans-serif; font-size: 12px; letter-spacing: 1px; color: var(--ink-dim); min-width: 62px; text-align: right; }
+
+.px-btn {
+  margin-top: 18px;
+  padding: 12px 22px;
+  border: 1px solid rgba(201,160,100,.4);
+  background: linear-gradient(180deg, rgba(30,24,16,.9), rgba(14,12,10,.9));
+  color: var(--gold);
+  font-family: 'Pixelify Sans', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: filter .15s, transform .1s;
+}
+.px-btn:hover { filter: brightness(1.2); }
+.px-btn:active { transform: translateY(1px); }
+.px-btn:disabled { opacity: .45; cursor: default; filter: none; }
+
+.quest-text { font-size: 16px; line-height: 1.55; color: var(--ink); margin-bottom: 14px; }
+.quest-reward { color: var(--gold); font-family: 'Handjet', sans-serif; letter-spacing: 2px; }
+.chest-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid rgba(201,160,100,.22); background: rgba(14,16,22,.65); margin-bottom: 10px; }

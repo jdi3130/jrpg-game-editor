@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JRPG Graphics Kit — превью ассетов</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #14151a;
+    color: #e8e8ec;
+    padding: 32px 28px 64px;
+  }
+  h1 { font-size: 24px; letter-spacing: .4px; }
+  .sub { color: #9aa0b0; font-size: 13px; margin: 6px 0 28px; }
+  h2 {
+    font-size: 15px; text-transform: uppercase; letter-spacing: 1.6px;
+    color: #ffb86b; margin: 36px 0 14px; padding-bottom: 8px;
+    border-bottom: 1px solid #2c2f3a;
+  }
+  .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+  .card {
+    background: #1d1f26; border: 1px solid #2c2f3a; border-radius: 12px;
+    padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .card .label { font-size: 11px; color: #9aa0b0; letter-spacing: .6px; text-transform: uppercase; }
+  .stage {
+    background:
+      repeating-conic-gradient(#1a1c22 0% 25%, #171920 0% 50%) 0 0 / 24px 24px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 150px; min-height: 150px;
+  }
+  .sprite {
+    width: 256px; height: 256px;
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: calc(var(--frames, 2) * 256px) 256px;
+    animation: play var(--dur, 0.6s) steps(var(--frames, 2)) infinite;
+  }
+  @keyframes play {
+    from { background-position: 0 0; }
+    to { background-position: calc(var(--frames, 2) * -256px) 0; }
+  }
+  .sprite.paused { animation-play-state: paused; }
+  .controls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  button {
+    font: inherit; font-size: 12px;
+    background: #262933; color: #cfd4e0;
+    border: 1px solid #383c4a; border-radius: 7px;
+    padding: 5px 10px; cursor: pointer;
+  }
+  button:hover { border-color: #5a6178; }
+  button.on { background: #33384a; color: #ffd9a8; border-color: #8a6a3a; }
+  .grid { display: grid; gap: 12px; }
+  .grid.tiles { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
+  .grid.small { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .tile { width: 100%; aspect-ratio: 1; image-rendering: pixelated; border-radius: 6px; display: block; }
+  .smallcard { align-items: center; text-align: center; }
+  .smallcard img { width: 96px; height: 96px; image-rendering: pixelated; }
+  .stripimg { height: 128px; image-rendering: pixelated; max-width: 100%; }
+  .note { color: #8b91a0; font-size: 12px; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <h1>JRPG Graphics Kit</h1>
+  <div class="sub">Гибрид стилей A+D: читаемый 16-бит силуэт, лунные тени, тёплые акценты. Все ассеты: <code>public/assets/jrpg/</code></div>
+
+  <h2>Герой — рыцарь</h2>
+  <div class="row" id="heroRow"></div>
+  <div class="note">Направления доступны для idle и walk. Attack / cast / hit / death — боком влево, движок зеркалит вправо.</div>
+
+  <h2>Враги и босс</h2>
+  <div class="row" id="enemyRow"></div>
+
+  <h2>Тайлы ландшафта</h2>
+  <div class="grid tiles" id="tileGrid"></div>
+
+  <h2>Переходы тайлов</h2>
+  <div class="grid tiles" id="transGrid"></div>
+
+  <h2>Пропсы</h2>
+  <div class="grid small" id="propGrid"></div>
+
+  <h2>GUI</h2>
+  <div class="grid small" id="guiGrid"></div>
+
+  <h2>VFX</h2>
+  <div class="row" id="vfxRow"></div>
+
+  <h2>Иконки предметов</h2>
+  <div class="grid small" id="itemGrid"></div>
+
+<script src="manifest.js"></script>
+<script type="module">
+const BASE = '../../public/assets/jrpg/';
+const manifest = window.JRPG_MANIFEST ?? await fetch(BASE + 'manifest.json').then((r) => r.json());
+const el = (tag, cls, html) => {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (html !== undefined) node.innerHTML = html;
+  return node;
+};
+
+const DIRS = { front: 'низ', back: 'верх', left: 'лево', right: 'право' };
+const ACTION_NAMES = { idle: 'idle', walk: 'walk', attack: 'атака', cast: 'каст', hit: 'урон', death: 'смерть' };
+const ACTION_DUR = { idle: 0.8, walk: 0.57, attack: 0.6, cast: 0.75, hit: 0.25, death: 1.0 };
+const ENEMY_DUR = { walk: 0.67, attack: 0.5, cast: 0.5, death: 0.5 };
+
+function spriteCard(file, frames, dur, label) {
+  const card = el('div', 'card');
+  const stage = el('div', 'stage');
+  const sprite = el('div', 'sprite');
+  sprite.style.backgroundImage = `url(${BASE}${file})`;
+  sprite.style.setProperty('--frames', frames);
+  sprite.style.setProperty('--dur', dur + 's');
+  stage.append(sprite);
+  card.append(stage, el('div', 'label', `${label} · ${frames} кадр.`));
+  return { card, sprite };
+}
+
+// ---------- герой ----------
+const heroRow = document.getElementById('heroRow');
+let heroSprite = null;
+let heroDir = 'front';
+
+function showHero(action, dir = heroDir) {
+  heroDir = dir;
+  const act = manifest.hero.actions[action];
+  const file = act.directions ? `hero/${act.directions[dir].file}` : `hero/${act.file}`;
+  const frames = act.directions ? act.directions[dir].frames : act.frames;
+  if (heroSprite) {
+    heroSprite.style.backgroundImage = `url(${BASE}${file})`;
+    heroSprite.style.setProperty('--frames', frames);
+    heroSprite.style.setProperty('--dur', ACTION_DUR[action] + 's');
+  }
+  heroRow.querySelectorAll('button').forEach((b) => {
+    b.classList.toggle('on', b.dataset.kind === 'action' ? b.dataset.value === action : b.dataset.value === dir);
+  });
+}
+
+{
+  const card = el('div', 'card');
+  const stage = el('div', 'stage');
+  heroSprite = el('div', 'sprite');
+  stage.append(heroSprite);
+  const controls = el('div', 'controls');
+  for (const [action, label] of Object.entries(ACTION_NAMES)) {
+    const b = el('button', '', label);
+    b.dataset.kind = 'action';
+    b.dataset.value = action;
+    b.onclick = () => showHero(action);
+    controls.append(b);
+  }
+  card.append(stage, el('div', 'label', 'герой'), controls);
+  heroRow.append(card);
+
+  const dirs = el('div', 'controls');
+  for (const [dir, label] of Object.entries(DIRS)) {
+    const b = el('button', '', label);
+    b.dataset.kind = 'dir';
+    b.dataset.value = dir;
+    b.onclick = () => showHero('walk', dir);
+    dirs.append(b);
+  }
+  const dirCard = el('div', 'card');
+  dirCard.append(el('div', 'label', 'направление (walk)'), dirs);
+  heroRow.append(dirCard);
+  showHero('walk', 'front');
+}
+
+// ---------- враги ----------
+const enemyRow = document.getElementById('enemyRow');
+for (const [name, data] of Object.entries(manifest.enemies)) {
+  const card = el('div', 'card');
+  const stage = el('div', 'stage');
+  const sprite = el('div', 'sprite');
+  stage.append(sprite);
+  const controls = el('div', 'controls');
+  const play = (action) => {
+    const act = data.actions[action];
+    sprite.style.backgroundImage = `url(${BASE}enemies/${act.file})`;
+    sprite.style.setProperty('--frames', act.frames);
+    sprite.style.setProperty('--dur', (ENEMY_DUR[action] ?? 0.6) + 's');
+    controls.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.value === action));
+  };
+  for (const action of Object.keys(data.actions)) {
+    const b = el('button', '', ACTION_NAMES[action] ?? action);
+    b.dataset.value = action;
+    b.onclick = () => play(action);
+    controls.append(b);
+  }
+  card.append(stage, el('div', 'label', name), controls);
+  enemyRow.append(card);
+  play('walk');
+}
+
+// ---------- тайлы ----------
+const tileNames = ['meadow', 'forest_floor', 'dirt_trail', 'cobble_path', 'stone_bricks', 'cave_rock', 'deep_water', 'shallow_water', 'graveyard'];
+const transNames = ['grass_dirt_edge', 'grass_stone_edge', 'grass_water_shore', 'dirt_cobble_edge', 'stone_cave_edge', 'cave_water_edge', 'grass_water_corner', 'grass_flowers', 'stone_broken'];
+for (const [id, names] of [['tileGrid', tileNames], ['transGrid', transNames]]) {
+  const grid = document.getElementById(id);
+  for (const name of names) {
+    const card = el('div', 'card smallcard');
+    const img = el('img', 'tile');
+    img.src = BASE + 'tiles/' + name + '.png';
+    img.alt = name;
+    card.append(img, el('div', 'label', name));
+    grid.append(card);
+  }
+}
+
+// ---------- простые сетки ----------
+function simpleGrid(id, items) {
+  const grid = document.getElementById(id);
+  for (const [name, file] of items) {
+    const card = el('div', 'card smallcard');
+    const img = el('img');
+    img.src = BASE + file;
+    img.alt = name;
+    card.append(img, el('div', 'label', name));
+    grid.append(card);
+  }
+}
+simpleGrid('propGrid', Object.entries(manifest.props).filter(([k]) => k !== 'cell').map(([k, v]) => [k, v.file]));
+simpleGrid('guiGrid', Object.entries(manifest.gui.elements).map(([k, v]) => [k, v.file]));
+simpleGrid('itemGrid', Object.entries(manifest.items.items).map(([k, v]) => [k, v.file]));
+
+// ---------- VFX как анимированные ленты ----------
+const vfxRow = document.getElementById('vfxRow');
+for (const [name, data] of Object.entries(manifest.vfx)) {
+  if (name === 'cell') continue;
+  const card = el('div', 'card');
+  const stage = el('div', 'stage');
+  const sprite = el('div', 'sprite');
+  sprite.style.backgroundImage = `url(${BASE}${data.file})`;
+  sprite.style.setProperty('--frames', data.frames);
+  sprite.style.setProperty('--dur', (data.frames / (data.fps ?? 12)) + 's');
+  stage.append(sprite);
+  card.append(stage, el('div', 'label', name));
+  vfxRow.append(card);
+}
+</script>
+</body>
+</html>

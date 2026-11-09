@@ -1,0 +1,15 @@
+# Logs & temp files
+*.log
+update_temp.zip
+update_extracted/
+_previews/test_*.png
+_previews/*_raw.png
+
+# System files
+Thumbs.db
+.DS_Store
+
+# Local secrets / tokens (keep repo and branch, exclude personal secret tokens)
+.env
+.env.local
+

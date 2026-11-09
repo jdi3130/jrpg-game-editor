@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Меню C — Врата</title>
+<link rel="stylesheet" href="menu.css">
+<style>
+  .stage { background-image: url('bg_gate.png'); }
+
+  .title-wrap {
+    position: fixed;
+    top: 6vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .game-title { font-size: 34px; }
+  .tagline { font-size: 16px; margin-top: 14px; }
+
+  .menu-bar {
+    position: fixed;
+    left: 50%;
+    bottom: 6vh;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    padding: 14px 18px;
+    max-width: 96vw;
+  }
+
+  .mbtn.wide {
+    width: auto;
+    min-width: 158px;
+    padding: 14px 20px;
+    background-image: url('../../public/assets/jrpg/gui/slot.png');
+    font-size: 15px;
+  }
+
+  .mbtn.wide:hover,
+  .mbtn.wide.sel {
+    background-image: url('../../public/assets/jrpg/gui/slot.png');
+    filter: brightness(1.25);
+  }
+
+  .mbtn.wide::before { display: none; }
+
+  .mbtn.wide .key {
+    display: block;
+    font-family: 'Handjet', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #6d7382;
+    margin-top: 4px;
+  }
+
+  .mbtn.wide:hover .key,
+  .mbtn.wide.sel .key { color: var(--gold-dim); }
+
+  /* оверлей выбора жанра */
+  .mode-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    background: rgba(6, 7, 11, .82);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+    z-index: 10;
+  }
+
+  .mode-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .mode-kicker {
+    font-family: 'Handjet', sans-serif;
+    font-size: 19px;
+    letter-spacing: 7px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255, 150, 60, .3);
+  }
+
+  .mode-cards { display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; }
+
+  .mode-card {
+    width: 336px;
+    padding: 40px 44px 46px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: filter .2s, transform .2s;
+  }
+
+  .mode-card:hover { filter: brightness(1.15); transform: translateY(-4px); }
+
+  .mode-sprite {
+    width: 196px;
+    height: 196px;
+    image-rendering: pixelated;
+    margin-bottom: 2px;
+  }
+
+  .mode-card.survivor .mode-sprite {
+    background: url('../../public/assets/jrpg/enemies/goblin_walk.png') 0 0 / 784px 196px no-repeat;
+    animation: strip4 1.6s steps(4) infinite;
+  }
+
+  .mode-card.jrpg .mode-sprite {
+    background: url('../../public/assets/jrpg/hero/idle_front.png') 0 0 / 392px 196px no-repeat;
+    animation: strip2 1.8s steps(2) infinite;
+  }
+
+  @keyframes strip4 {
+    from { background-position: 0 0; }
+    to { background-position: -784px 0; }
+  }
+
+  @keyframes strip2 {
+    from { background-position: 0 0; }
+    to { background-position: -392px 0; }
+  }
+
+  .mode-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 15px;
+    color: #ece5d8;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 0 #15100a, 0 0 16px rgba(255, 140, 50, .2);
+  }
+
+  .mode-desc {
+    font-size: 13px;
+    color: #a9aebd;
+    line-height: 1.55;
+    min-height: 63px;
+    max-width: 218px;
+  }
+
+  .mode-card .mbtn { margin-top: 8px; width: 78%; }
+
+  .close-hint {
+    font-family: 'Handjet', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #6d7382;
+  }
+</style>
+</head>
+<body>
+  <div class="stage"></div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+
+  <div class="title-wrap">
+    <div class="game-title">ТОША <span class="accent">ЛЕГЕНДА</span></div>
+    <div class="tagline">тёмное фэнтези · два пути</div>
+  </div>
+
+  <nav class="menu-bar">
+    <button class="mbtn wide" id="newGame">НОВАЯ ИГРА<span class="key">ENTER</span></button>
+    <button class="mbtn wide">ПРОДОЛЖИТЬ<span class="key">ГЛАВА II</span></button>
+    <button class="mbtn wide" id="modeBtn">ЖАНР<span class="key">JRPG</span></button>
+    <button class="mbtn wide">НАСТРОЙКИ<span class="key">CFG</span></button>
+    <button class="mbtn wide">ВЫХОД<span class="key">ESC</span></button>
+  </nav>
+
+  <div class="mode-overlay" id="modeOverlay">
+    <div class="mode-kicker">Выберите жанр</div>
+    <div class="mode-cards">
+      <div class="mode-card panel jrpg" data-mode="jrpg">
+        <div class="mode-sprite"></div>
+        <div class="mode-name">JRPG</div>
+        <div class="mode-desc">Мрачное экшен-RPG в духе Diablo: биомы, боссы, лут и руны. Сюжетная кампания.</div>
+        <button class="mbtn">НАЧАТЬ</button>
+      </div>
+      <div class="mode-card panel survivor" data-mode="survivor">
+        <div class="mode-sprite"></div>
+        <div class="mode-name">ВЫЖИВАНИЕ</div>
+        <div class="mode-desc">Волны врагов, автоатаки и прокачка забега. Режим Vampire Survivors.</div>
+        <button class="mbtn">НАЧАТЬ</button>
+      </div>
+    </div>
+    <div class="close-hint">ESC — закрыть</div>
+  </div>
+
+  <div class="version">ТОША ЛЕГЕНДА · v1.0 · ГИБРИД A+D</div>
+  <div class="hint">← → выбрать · ENTER подтвердить</div>
+
+<script type="module">
+  import { initMenu } from './menu.js';
+  initMenu({ axis: 'x' });
+
+  const overlay = document.getElementById('modeOverlay');
+  const open = () => overlay.classList.add('open');
+  const close = () => overlay.classList.remove('open');
+  if (new URLSearchParams(location.search).has('mode') || location.hash === '#mode') open();
+
+  document.getElementById('newGame').addEventListener('click', open);
+  document.getElementById('modeBtn').addEventListener('click', open);
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  document.querySelectorAll('.mode-card').forEach((card) => {
+    card.querySelector('.mbtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.querySelector('.mbtn').textContent = 'ЗАГРУЗКА…';
+      setTimeout(close, 900);
+    });
+  });
+</script>
+</body>
+</html>

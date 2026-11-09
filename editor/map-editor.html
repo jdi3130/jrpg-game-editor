@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JRPG Map Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;800&family=Handjet:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="brand">JRPG <span>MAP EDITOR</span></div>
+
+    <div class="group">
+      <label>Карта
+        <input id="sizeW" type="number" min="8" max="256" value="26">
+        ×
+        <input id="sizeH" type="number" min="8" max="256" value="17">
+      </label>
+      <select id="sizePreset" title="Пресеты размера">
+        <option value="">Размер...</option>
+        <option value="26x17">26×17 (Деревня)</option>
+        <option value="50x50">50×50 (Лагерь)</option>
+        <option value="100x100">100×100 (Подземелье)</option>
+        <option value="150x150">150×150 (Огромная)</option>
+        <option value="200x200">200×200 (Эпическая)</option>
+      </select>
+      <button id="applySize" class="px-btn small">ПРИМЕНИТЬ</button>
+      <button id="newMap" class="px-btn small">НОВАЯ</button>
+      <select id="gridSize" title="Размер сетки (тайла)">
+        <option value="48" selected>Сетка: 48px (×2 мелкая)</option>
+        <option value="96">Сетка: 96px (крупная)</option>
+        <option value="32">Сетка: 32px (×3)</option>
+        <option value="24">Сетка: 24px (×4 микро)</option>
+      </select>
+      <select id="mapPreset" title="Загрузить тестовую карту">
+        <option value="">Готовые карты...</option>
+        <option value="village">Деревня (Хаб)</option>
+        <option value="01_dark_forest">1. Тёмный Лес</option>
+        <option value="02_forgotten_crypt">2. Забытый Склеп</option>
+        <option value="03_infernal_chasm">3. Инферно</option>
+      </select>
+    </div>
+
+    <div class="group tools" id="tools">
+      <button data-tool="tile" class="tool active" title="1">ТАЙЛ</button>
+      <button data-tool="prop" class="tool" title="2">ОБЪЕКТ</button>
+      <button data-tool="marker" class="tool" title="3">МЕТКА</button>
+      <button data-tool="select" class="tool" title="4">ВЫБОР</button>
+      <button data-tool="erase" class="tool" title="5">ЛАСТИК</button>
+      <button data-tool="fill" class="tool" title="6">ЗАЛИВКА</button>
+      <button data-tool="path" class="tool" title="7">ДОРОГА</button>
+    </div>
+
+    <div class="group">
+      <label>Кисть <select id="brush"><option>1</option><option selected>3</option><option>5</option><option>7</option></select></label>
+      <label>Симметрия
+        <select id="symmetry">
+          <option value="off">Выкл</option>
+          <option value="h">Гориз.</option>
+          <option value="v">Верт.</option>
+          <option value="hv">Обе</option>
+        </select>
+      </label>
+      <button id="undo" class="px-btn small" title="Ctrl+Z">ОТМЕНА</button>
+    </div>
+
+    <div class="group">
+      <button id="zoomOut" class="px-btn small">−</button>
+      <span id="zoomVal" class="zoom">100%</span>
+      <button id="zoomIn" class="px-btn small">+</button>
+      <button id="zoomFit" class="px-btn small">ВПИСАТЬ</button>
+    </div>
+
+    <div class="group actions">
+      <button id="saveMapBtn" class="px-btn small save-map-btn" title="Сохранить карту (Ctrl+S)">💾 СОХРАНИТЬ КАРТУ</button>
+      <button id="autoDecor" class="px-btn small">АВТО-ДЕКОР</button>
+      <button id="clearProps" class="px-btn small">ЧИСТКА ОБЪЕКТОВ</button>
+      <button id="clearMarkers" class="px-btn small">ЧИСТКА МЕТОК</button>
+      <button id="validate" class="px-btn small">ПРОВЕРИТЬ</button>
+      <button id="exportJson" class="px-btn small">JSON</button>
+      <button id="loadJson" class="px-btn small">ОТКРЫТЬ</button>
+      <input id="fileInput" type="file" accept="application/json,.json" hidden>
+      <label class="check"><input id="pngMarkers" type="checkbox" checked> метки в PNG</label>
+      <button id="exportPng" class="px-btn small">PNG</button>
+      <button id="btnCheckUpdates" class="px-btn small update-btn" title="Проверить обновления редактора на GitHub">
+        <span id="updateIcon">☁</span> ОБНОВЛЕНИЯ <span id="updateBadge" class="update-pill hidden">NEW</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="main">
+    <aside class="panel palette">
+      <div class="tabs">
+        <button class="tab active" data-tab="tiles">ТАЙЛЫ</button>
+        <button class="tab" data-tab="props">ОБЪЕКТЫ</button>
+        <button class="tab" data-tab="npcs">NPC</button>
+        <button class="tab" data-tab="markers">МЕТКИ</button>
+      </div>
+      <div id="propCats" class="cat-pills hidden"></div>
+      <div id="tileTransformBar" class="tile-transform-bar"></div>
+      <div id="paletteBody" class="palette-body"></div>
+    </aside>
+
+    <section class="stage">
+      <canvas id="editor"></canvas>
+      <div id="hoverTip" class="hover-tip hidden"></div>
+      <div id="status" class="status"></div>
+    </section>
+
+    <aside class="panel info">
+      <h3>СВОЙСТВА</h3>
+      <div id="infoBody" class="info-body"></div>
+    </aside>
+  </div>
+
+  <!-- Модальное окно сохранения карты с вводом названия -->
+  <div id="saveModal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">💾 СОХРАНЕНИЕ КАРТЫ</span>
+        <button id="modalCloseBtn" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label for="modalMapName">НАЗВАНИЕ КАРТЫ:</label>
+        <input id="modalMapName" type="text" placeholder="Введите название (напр. Лагерь монстров)..." maxlength="60">
+        <div class="modal-options">
+          <label class="check"><input id="modalDownloadJson" type="checkbox" checked> Скачать файл <b>.json</b> на компьютер</label>
+          <label class="check"><input id="modalSavePreset" type="checkbox" checked> Добавить в список карт (в память)</label>
+        </div>
+        <div class="modal-hint">Карта сохранится со всеми тайлами, объектами, монстрами/NPC и метками.</div>
+      </div>
+      <div class="modal-footer">
+        <button id="modalConfirmBtn" class="px-btn highlight">💾 СОХРАНИТЬ</button>
+        <button id="modalCancelBtn" class="px-btn">ОТМЕНА</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Окно проверки обновлений GitHub -->
+  <div id="updateModal" class="modal hidden">
+    <div class="modal-box update-modal-box">
+      <div class="modal-header">
+        <span class="modal-title">☁ ОБНОВЛЕНИЯ РЕДАКТОРА (GITHUB SYNC)</span>
+        <button id="closeUpdateModal" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="update-status-card" id="updateStatusCard">
+          <div id="updateStatusText" class="update-status-title">Проверка обновлений...</div>
+          <div id="updateDetails" class="update-details-text">Нажмите «Проверить сейчас» для связи с GitHub.</div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>Репозиторий GitHub (owner/repo):</label>
+          <input id="ghRepoInput" type="text" placeholder="например: yourname/jrpg-game" style="width:100%">
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label>Ветка (Branch):</label>
+          <input id="ghBranchInput" type="text" value="main" style="width:100%">
+        </div>
+        <div class="field" style="margin-top:8px">
+          <label>GitHub Personal Access Token (для доступа и создания репо):</label>
+          <input id="ghTokenInput" type="password" placeholder="ghp_..." style="width:100%">
+          <div style="margin-top:5px">
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=JRPG-Map-Editor" target="_blank" class="px-btn" style="font-size:10px;text-decoration:none;display:inline-block;padding:3px 8px;background:#2d3748">🔑 Создать токен на GitHub (в 1 клик)</a>
+          </div>
+        </div>
+        <div class="modal-hint" style="margin-top:10px">
+          💡 Редактор проверяет коммиты на GitHub. Если вы опубликовали обновление на одном ПК, редактор на другом ПК сразу обнаружит его.
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="btnCheckNow" class="px-btn highlight">🔄 ПРОВЕРИТЬ СЕЙЧАС</button>
+        <button id="btnApplyUpdate" class="px-btn save-map-btn" style="background:#204e22" disabled>⬇ СКАЧАТЬ И ОБНОВИТЬ</button>
+        <button id="btnCancelUpdate" class="px-btn">ЗАКРЫТЬ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="editor.js"></script>
+</body>
+</html>

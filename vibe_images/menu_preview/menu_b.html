@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Меню B — Привал</title>
+<link rel="stylesheet" href="menu.css">
+<style>
+  .stage { background-image: url('bg_campfire.png'); }
+
+  .brand {
+    position: fixed;
+    left: 5vw;
+    top: 5vh;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .brand-sprite {
+    width: 210px;
+    height: 210px;
+    image-rendering: pixelated;
+    background: url('../../public/assets/jrpg/hero/idle_front.png') 0 0 / 420px 210px no-repeat;
+    animation: heroIdle 1.6s steps(2) infinite;
+    filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .6));
+  }
+
+  @keyframes heroIdle {
+    from { background-position: 0 0; }
+    to { background-position: -420px 0; }
+  }
+
+  .brand .game-title { font-size: 24px; }
+  .brand .tagline { font-size: 15px; margin-top: 12px; }
+
+  .menu-wrap {
+    position: fixed;
+    left: 5vw;
+    bottom: 7vh;
+    width: min(540px, 92vw);
+  }
+
+  .save-info {
+    font-family: 'Handjet', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #a7adbb;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .9);
+    margin-bottom: 12px;
+    padding-left: 8px;
+  }
+
+  .save-info b { color: var(--gold); font-weight: 400; }
+
+  .dialog-panel { padding: 68px 72px 60px; }
+
+  .dialog-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 4px 6px;
+    background: linear-gradient(180deg, rgba(8, 9, 14, .38), rgba(8, 9, 14, .28));
+    border-radius: 3px;
+  }
+
+  .tbtn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 12px 10px;
+    border: 0;
+    border-bottom: 1px solid rgba(201, 160, 100, .1);
+    background: transparent;
+    color: #e3e7ef;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 19px;
+    letter-spacing: 1px;
+    text-align: left;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .85);
+    cursor: pointer;
+    transition: color .15s, text-shadow .15s, transform .15s;
+  }
+
+  .tbtn:last-child { border-bottom: 0; }
+
+  .tbtn::before {
+    content: '▸';
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    transform: none;
+    background: none;
+    box-shadow: none;
+    color: transparent;
+    transition: color .15s;
+  }
+
+  .tbtn:hover,
+  .tbtn.sel {
+    color: var(--gold);
+    text-shadow: var(--glow);
+    transform: translateX(6px);
+  }
+
+  .tbtn:hover::before,
+  .tbtn.sel::before { color: var(--gold); transform: none; }
+
+  .tbtn small {
+    margin-left: auto;
+    font-family: 'Handjet', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #8a90a0;
+  }
+
+  .tbtn:hover small,
+  .tbtn.sel small { color: var(--gold-dim); }
+</style>
+</head>
+<body>
+  <div class="stage"></div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+
+  <header class="brand">
+    <div class="brand-sprite"></div>
+    <div>
+      <div class="game-title">ТОША<br><span class="accent">ЛЕГЕНДА</span></div>
+      <div class="tagline">тёмное фэнтези · action rpg</div>
+    </div>
+  </header>
+
+  <div class="menu-wrap">
+    <div class="save-info">Последнее сохранение: <b>Глава II · Пепельный лес</b> · 2 ч назад</div>
+    <nav class="dialog-panel">
+      <div class="dialog-inner">
+        <button class="mbtn tbtn">Новая игра <small>н</small></button>
+        <button class="mbtn tbtn">Продолжить <small>п</small></button>
+        <button class="mbtn tbtn">Выбор жанра <small>ж</small></button>
+        <button class="mbtn tbtn">Настройки <small>н</small></button>
+        <button class="mbtn tbtn">Выход <small>выход</small></button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="version">ТОША ЛЕГЕНДА · v1.0 · ГИБРИД A+D</div>
+  <div class="hint">↑ ↓ выбрать · ENTER подтвердить</div>
+
+<script type="module">
+  import { initMenu } from './menu.js';
+  initMenu({ axis: 'y' });
+</script>
+</body>
+</html>

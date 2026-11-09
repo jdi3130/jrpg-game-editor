@@ -1,0 +1,889 @@
+{
+  "cell": 128,
+  "hero": {
+    "cell": 128,
+    "actions": {
+      "idle": {
+        "fps": 2.5,
+        "directions": {
+          "front": {
+            "file": "idle_front.png",
+            "frames": 2
+          },
+          "back": {
+            "file": "idle_back.png",
+            "frames": 2
+          },
+          "left": {
+            "file": "idle_left.png",
+            "frames": 2
+          },
+          "right": {
+            "file": "idle_right.png",
+            "frames": 2
+          }
+        }
+      },
+      "walk": {
+        "fps": 7,
+        "directions": {
+          "front": {
+            "file": "walk_front.png",
+            "frames": 4
+          },
+          "back": {
+            "file": "walk_back.png",
+            "frames": 4
+          },
+          "left": {
+            "file": "walk_left.png",
+            "frames": 4
+          },
+          "right": {
+            "file": "walk_right.png",
+            "frames": 4
+          }
+        }
+      },
+      "attack": {
+        "file": "attack.png",
+        "frames": 6,
+        "fps": 10
+      },
+      "cast": {
+        "file": "cast.png",
+        "frames": 6,
+        "fps": 8
+      },
+      "hit": {
+        "file": "hit.png",
+        "frames": 2,
+        "fps": 8
+      },
+      "death": {
+        "file": "death.png",
+        "frames": 6,
+        "fps": 6
+      }
+    }
+  },
+  "enemies": {
+    "goblin": {
+      "cell": 128,
+      "actions": {
+        "walk": {
+          "file": "goblin_walk.png",
+          "frames": 4,
+          "fps": 6
+        },
+        "attack": {
+          "file": "goblin_attack.png",
+          "frames": 4,
+          "fps": 8
+        },
+        "death": {
+          "file": "goblin_death.png",
+          "frames": 4,
+          "fps": 8
+        }
+      }
+    },
+    "skeleton": {
+      "cell": 128,
+      "actions": {
+        "walk": {
+          "file": "skeleton_walk.png",
+          "frames": 4,
+          "fps": 6
+        },
+        "attack": {
+          "file": "skeleton_attack.png",
+          "frames": 4,
+          "fps": 8
+        },
+        "death": {
+          "file": "skeleton_death.png",
+          "frames": 4,
+          "fps": 8
+        }
+      }
+    },
+    "cultist": {
+      "cell": 128,
+      "actions": {
+        "walk": {
+          "file": "cultist_walk.png",
+          "frames": 4,
+          "fps": 6
+        },
+        "attack": {
+          "file": "cultist_attack.png",
+          "frames": 4,
+          "fps": 8
+        },
+        "death": {
+          "file": "cultist_death.png",
+          "frames": 4,
+          "fps": 8
+        }
+      }
+    },
+    "demon": {
+      "cell": 128,
+      "actions": {
+        "walk": {
+          "file": "demon_walk.png",
+          "frames": 4,
+          "fps": 6
+        },
+        "attack": {
+          "file": "demon_attack.png",
+          "frames": 4,
+          "fps": 8
+        },
+        "cast": {
+          "file": "demon_cast.png",
+          "frames": 4,
+          "fps": 8
+        },
+        "death": {
+          "file": "demon_death.png",
+          "frames": 4,
+          "fps": 8
+        }
+      }
+    }
+  },
+  "tiles": {
+    "cell": 256,
+    "tiles": {
+      "meadow": {
+        "file": "tiles/meadow.png",
+        "size": 256
+      },
+      "forest_floor": {
+        "file": "tiles/forest_floor.png",
+        "size": 256
+      },
+      "dirt_trail": {
+        "file": "tiles/dirt_trail.png",
+        "size": 256
+      },
+      "cobble_path": {
+        "file": "tiles/cobble_path.png",
+        "size": 256
+      },
+      "stone_bricks": {
+        "file": "tiles/stone_bricks.png",
+        "size": 256
+      },
+      "cave_rock": {
+        "file": "tiles/cave_rock.png",
+        "size": 256
+      },
+      "deep_water": {
+        "file": "tiles/deep_water.png",
+        "size": 256
+      },
+      "shallow_water": {
+        "file": "tiles/shallow_water.png",
+        "size": 256
+      },
+      "graveyard": {
+        "file": "tiles/graveyard.png",
+        "size": 256
+      },
+      "grass_dirt_edge": {
+        "file": "tiles/grass_dirt_edge.png",
+        "size": 256
+      },
+      "grass_stone_edge": {
+        "file": "tiles/grass_stone_edge.png",
+        "size": 256
+      },
+      "grass_water_shore": {
+        "file": "tiles/grass_water_shore.png",
+        "size": 256
+      },
+      "dirt_cobble_edge": {
+        "file": "tiles/dirt_cobble_edge.png",
+        "size": 256
+      },
+      "stone_cave_edge": {
+        "file": "tiles/stone_cave_edge.png",
+        "size": 256
+      },
+      "cave_water_edge": {
+        "file": "tiles/cave_water_edge.png",
+        "size": 256
+      },
+      "grass_water_corner": {
+        "file": "tiles/grass_water_corner.png",
+        "size": 256
+      },
+      "grass_flowers": {
+        "file": "tiles/grass_flowers.png",
+        "size": 256
+      },
+      "stone_broken": {
+        "file": "tiles/stone_broken.png",
+        "size": 256
+      },
+      "crypt_tiles": {
+        "file": "tiles/crypt_tiles.png",
+        "size": 256
+      },
+      "lava_stone": {
+        "file": "tiles/lava_stone.png",
+        "size": 256
+      },
+      "swamp_mud": {
+        "file": "tiles/swamp_mud.png",
+        "size": 256
+      },
+      "blood_stone": {
+        "file": "tiles/blood_stone.png",
+        "size": 256
+      },
+      "wood_planks": {
+        "file": "tiles/wood_planks.png",
+        "size": 256
+      },
+      "marble_sanctuary": {
+        "file": "tiles/marble_sanctuary.png",
+        "size": 256
+      },
+      "desert_sand": {
+        "file": "tiles/desert_sand.png",
+        "size": 256
+      },
+      "snow_ice": {
+        "file": "tiles/snow_ice.png",
+        "size": 256
+      },
+      "toxic_sludge": {
+        "file": "tiles/toxic_sludge.png",
+        "size": 256
+      },
+      "obsidian_void": {
+        "file": "tiles/obsidian_void.png",
+        "size": 256
+      },
+      "dungeon_flagstones": {
+        "file": "tiles/dungeon_flagstones.png",
+        "size": 256
+      },
+      "ruin_cobbles": {
+        "file": "tiles/ruin_cobbles.png",
+        "size": 256
+      },
+      "city_cobblestone_square": {
+        "file": "tiles/city_cobblestone_square.png",
+        "size": 128
+      },
+      "city_stone_pavement": {
+        "file": "tiles/city_stone_pavement.png",
+        "size": 128
+      },
+      "city_brick_road": {
+        "file": "tiles/city_brick_road.png",
+        "size": 128
+      },
+      "city_curb_stone": {
+        "file": "tiles/city_curb_stone.png",
+        "size": 128
+      },
+      "city_plaza_mosaic": {
+        "file": "tiles/city_plaza_mosaic.png",
+        "size": 128
+      },
+      "city_canal_quay": {
+        "file": "tiles/city_canal_quay.png",
+        "size": 128
+      },
+      "city_wood_dock": {
+        "file": "tiles/city_wood_dock.png",
+        "size": 128
+      },
+      "city_castle_marble": {
+        "file": "tiles/city_castle_marble.png",
+        "size": 128
+      },
+      "city_roof_tiles": {
+        "file": "tiles/city_roof_tiles.png",
+        "size": 128
+      },
+      "city_garden_path": {
+        "file": "tiles/city_garden_path.png",
+        "size": 128
+      },
+      "trail_edge": {
+        "file": "tiles/trail_edge.png",
+        "size": 128
+      },
+      "trail_to_cobble": {
+        "file": "tiles/trail_to_cobble.png",
+        "size": 128
+      },
+      "cobble_pavement": {
+        "file": "tiles/cobble_pavement.png",
+        "size": 128
+      }
+    }
+  },
+  "props": {
+    "cell": 128,
+    "pine_tree": {
+      "file": "props/pine_tree.png"
+    },
+    "dead_tree": {
+      "file": "props/dead_tree.png"
+    },
+    "boulder": {
+      "file": "props/boulder.png"
+    },
+    "chest": {
+      "file": "props/chest.png"
+    },
+    "campfire": {
+      "file": "props/campfire.png",
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "signpost": {
+      "file": "props/signpost.png"
+    },
+    "gravestone": {
+      "file": "props/gravestone.png"
+    },
+    "ruin_statue": {
+      "file": "props/ruin_statue.png"
+    },
+    "barrel": {
+      "file": "props/barrel.png"
+    },
+    "crate": {
+      "file": "props/crate.png"
+    },
+    "bones": {
+      "file": "props/bones.png"
+    },
+    "rune_stone": {
+      "file": "props/rune_stone.png"
+    },
+    "fountain": {
+      "file": "props/fountain.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "statue_hero": {
+      "file": "props/statue_hero.png"
+    },
+    "torch_standing": {
+      "file": "props/torch_standing.png",
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "well": {
+      "file": "props/well.png"
+    },
+    "market_stall": {
+      "file": "props/market_stall.png"
+    },
+    "notice_board": {
+      "file": "props/notice_board.png"
+    },
+    "house_wood": {
+      "file": "props/house_wood.png",
+      "cell": 256
+    },
+    "house_stone": {
+      "file": "props/house_stone.png",
+      "cell": 256
+    },
+    "smithy": {
+      "file": "props/smithy.png",
+      "frames": 4,
+      "fps": 6,
+      "cell": 256,
+      "glow": true
+    },
+    "warrior_guard": {
+      "file": "props/warrior_guard.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "warrior_knight": {
+      "file": "props/warrior_knight.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "warrior_archer": {
+      "file": "props/warrior_archer.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "warrior_mercenary": {
+      "file": "props/warrior_mercenary.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "merchant_weapon": {
+      "file": "props/merchant_weapon.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "merchant_potion": {
+      "file": "props/merchant_potion.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "merchant_general": {
+      "file": "props/merchant_general.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "npc_villager_f": {
+      "file": "props/npc_villager_f.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "npc_elder": {
+      "file": "props/npc_elder.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "npc_villager_m": {
+      "file": "props/npc_villager_m.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "npc_girl": {
+      "file": "props/npc_girl.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "npc_maid": {
+      "file": "props/npc_maid.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "animal_horse": {
+      "file": "props/animal_horse.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "animal_cow": {
+      "file": "props/animal_cow.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "animal_sheep": {
+      "file": "props/animal_sheep.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "animal_dog": {
+      "file": "props/animal_dog.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "animal_cat": {
+      "file": "props/animal_cat.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "animal_chicken": {
+      "file": "props/animal_chicken.png",
+      "frames": 4,
+      "fps": 7
+    },
+    "sarcophagus": {
+      "file": "props/sarcophagus.png"
+    },
+    "altar_blood": {
+      "file": "props/altar_blood.png"
+    },
+    "skull_pile": {
+      "file": "props/skull_pile.png"
+    },
+    "iron_cage": {
+      "file": "props/iron_cage.png"
+    },
+    "dungeon_gate": {
+      "file": "props/dungeon_gate.png"
+    },
+    "crypt_tomb": {
+      "file": "props/crypt_tomb.png"
+    },
+    "stalagmite": {
+      "file": "props/stalagmite.png"
+    },
+    "brazier_fire": {
+      "file": "props/brazier_fire.png",
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "dark_crystal": {
+      "file": "props/dark_crystal.png",
+      "frames": 4,
+      "fps": 4
+    },
+    "lava_fissure": {
+      "file": "props/lava_fissure.png",
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "pentagram": {
+      "file": "props/pentagram.png"
+    },
+    "bone_totem": {
+      "file": "props/bone_totem.png"
+    },
+    "corrupt_tree": {
+      "file": "props/corrupt_tree.png",
+      "frames": 2,
+      "fps": 2.5
+    },
+    "goblin_tent": {
+      "file": "props/goblin_tent.png"
+    },
+    "broken_wagon": {
+      "file": "props/broken_wagon.png"
+    },
+    "ancient_shrine": {
+      "file": "props/ancient_shrine.png",
+      "frames": 4,
+      "fps": 5
+    },
+    "house_ruin_burnt": {
+      "file": "props/house_ruin_burnt.png",
+      "cell": 256
+    },
+    "house_ruin_stone": {
+      "file": "props/house_ruin_stone.png",
+      "cell": 256
+    },
+    "house_ruin_tower": {
+      "file": "props/house_ruin_tower.png",
+      "cell": 256
+    },
+    "house_witch_shack": {
+      "file": "props/house_witch_shack.png",
+      "cell": 256
+    },
+    "house_mausoleum": {
+      "file": "props/house_mausoleum.png",
+      "cell": 256
+    },
+    "house_windmill": {
+      "file": "props/house_windmill.png",
+      "cell": 256
+    },
+    "house_tavern_inn": {
+      "file": "props/house_tavern_inn.png",
+      "cell": 256
+    },
+    "house_chapel": {
+      "file": "props/house_chapel.png",
+      "cell": 256
+    },
+    "house_ruin_smithy": {
+      "file": "props/house_ruin_smithy.png",
+      "cell": 256
+    },
+    "house_war_tent": {
+      "file": "props/house_war_tent.png",
+      "cell": 256
+    },
+    "house_watermill": {
+      "file": "props/house_watermill.png",
+      "cell": 256
+    },
+    "house_hermit_cabin": {
+      "file": "props/house_hermit_cabin.png",
+      "cell": 256
+    },
+    "campfire_pot": {
+      "file": "props/campfire_pot.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "campfire_ashes": {
+      "file": "props/campfire_ashes.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "campfire_ritual": {
+      "file": "props/campfire_ritual.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "campfire_stones": {
+      "file": "props/campfire_stones.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "campfire_beacon": {
+      "file": "props/campfire_beacon.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "prop_potions": {
+      "file": "props/prop_potions.png",
+      "cell": 128
+    },
+    "prop_gold_pile": {
+      "file": "props/prop_gold_pile.png",
+      "cell": 128
+    },
+    "prop_mushrooms": {
+      "file": "props/prop_mushrooms.png",
+      "cell": 128
+    },
+    "prop_candles": {
+      "file": "props/prop_candles.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6,
+      "glow": true
+    },
+    "prop_urn": {
+      "file": "props/prop_urn.png",
+      "cell": 128
+    },
+    "prop_gargoyle": {
+      "file": "props/prop_gargoyle.png",
+      "cell": 128
+    },
+    "prop_dragon_bones": {
+      "file": "props/prop_dragon_bones.png",
+      "cell": 256
+    },
+    "enemy_skeleton": {
+      "file": "props/enemy_skeleton.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "enemy_goblin": {
+      "file": "props/enemy_goblin.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "enemy_cultist": {
+      "file": "props/enemy_cultist.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "enemy_demon": {
+      "file": "props/enemy_demon.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "enemy_gargoyle": {
+      "file": "props/enemy_gargoyle.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "enemy_slime": {
+      "file": "props/enemy_slime.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "npc_mage": {
+      "file": "props/npc_mage.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 3.5
+    },
+    "hero_player": {
+      "file": "props/hero_player.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 4
+    },
+    "portal_arcane": {
+      "file": "props/portal_arcane.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6
+    },
+    "portal_inferno": {
+      "file": "props/portal_inferno.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6
+    },
+    "portal_void": {
+      "file": "props/portal_void.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6
+    },
+    "portal_nature": {
+      "file": "props/portal_nature.png",
+      "cell": 128,
+      "frames": 4,
+      "fps": 6
+    }
+  },
+  "gui": {
+    "cell": 256,
+    "elements": {
+      "panel": {
+        "file": "gui/panel.png"
+      },
+      "button": {
+        "file": "gui/button.png"
+      },
+      "button_pressed": {
+        "file": "gui/button_pressed.png"
+      },
+      "orb_hp": {
+        "file": "gui/orb_hp.png"
+      },
+      "orb_mp": {
+        "file": "gui/orb_mp.png"
+      },
+      "slot": {
+        "file": "gui/slot.png"
+      },
+      "skillbar": {
+        "file": "gui/skillbar.png"
+      },
+      "minimap": {
+        "file": "gui/minimap.png"
+      },
+      "gold_plate": {
+        "file": "gui/gold_plate.png"
+      },
+      "dialogue": {
+        "file": "gui/dialogue.png"
+      },
+      "cursor": {
+        "file": "gui/cursor.png"
+      },
+      "tooltip": {
+        "file": "gui/tooltip.png"
+      }
+    }
+  },
+  "vfx": {
+    "cell": 128,
+    "fireball_shot": {
+      "file": "vfx/fireball_shot.png",
+      "frames": 4,
+      "fps": 12
+    },
+    "fireball_explosion": {
+      "file": "vfx/fireball_explosion.png",
+      "frames": 4,
+      "fps": 12
+    },
+    "slash": {
+      "file": "vfx/slash.png",
+      "frames": 4,
+      "fps": 12
+    },
+    "hit_spark": {
+      "file": "vfx/hit_spark.png",
+      "frames": 4,
+      "fps": 12
+    },
+    "heal": {
+      "file": "vfx/heal.png",
+      "frames": 4,
+      "fps": 12
+    },
+    "portal": {
+      "file": "vfx/portal.png",
+      "frames": 4,
+      "fps": 12
+    }
+  },
+  "items": {
+    "cell": 96,
+    "items": {
+      "sword": {
+        "file": "items/sword.png"
+      },
+      "axe": {
+        "file": "items/axe.png"
+      },
+      "staff": {
+        "file": "items/staff.png"
+      },
+      "bow": {
+        "file": "items/bow.png"
+      },
+      "shield": {
+        "file": "items/shield.png"
+      },
+      "helmet": {
+        "file": "items/helmet.png"
+      },
+      "armor": {
+        "file": "items/armor.png"
+      },
+      "boots": {
+        "file": "items/boots.png"
+      },
+      "potion_hp": {
+        "file": "items/potion_hp.png"
+      },
+      "potion_mp": {
+        "file": "items/potion_mp.png"
+      },
+      "gold": {
+        "file": "items/gold.png"
+      },
+      "scroll": {
+        "file": "items/scroll.png"
+      },
+      "ruby": {
+        "file": "items/ruby.png"
+      },
+      "rune": {
+        "file": "items/rune.png"
+      },
+      "ring": {
+        "file": "items/ring.png"
+      },
+      "amulet": {
+        "file": "items/amulet.png"
+      }
+    }
+  }
+}

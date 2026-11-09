@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Меню A — Руины</title>
+<link rel="stylesheet" href="menu.css">
+<style>
+  .stage { background-image: url('bg_ruins.png'); }
+
+  .menu-wrap {
+    position: fixed;
+    right: 6vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(452px, 90vw);
+  }
+
+  .title-block { text-align: center; margin-bottom: 30px; }
+  .game-title { font-size: 30px; }
+  .tagline { font-size: 15px; margin-top: 12px; }
+
+  .menu-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 62px 32px 44px;
+  }
+
+  .menu-panel .mbtn { padding-top: 14px; padding-bottom: 13px; }
+
+  .menu-panel .mbtn small { color: #9aa1b2; }
+
+  .orb {
+    position: fixed;
+    bottom: 26px;
+    width: 128px;
+    height: 128px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .7));
+  }
+  .orb.hp { left: 30px; }
+  .orb.mp { right: 30px; }
+  .orb::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 50%;
+    bottom: -4px;
+    transform: translateX(-50%);
+    font-family: 'Handjet', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--gold-dim);
+  }
+
+  .footer-title { left: 50%; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+  <div class="stage"></div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+
+  <div class="menu-wrap">
+    <div class="title-block">
+      <div class="game-title">ТОША<br><span class="accent">ЛЕГЕНДА</span></div>
+      <div class="tagline">тёмное фэнтези · action rpg</div>
+    </div>
+
+    <nav class="menu-panel panel">
+      <button class="mbtn">НОВАЯ ИГРА<small>Начать путь</small></button>
+      <button class="mbtn">ПРОДОЛЖИТЬ<small>Глава II · Пепельный лес</small></button>
+      <button class="mbtn">ВЫБОР ЖАНРА<small>JRPG · Выживание</small></button>
+      <button class="mbtn">НАСТРОЙКИ</button>
+      <button class="mbtn">ВЫХОД</button>
+    </nav>
+  </div>
+
+  <img class="orb hp" data-label="ЖИЗНЬ" src="../../public/assets/jrpg/gui/orb_hp.png" alt="">
+  <img class="orb mp" data-label="МАНА" src="../../public/assets/jrpg/gui/orb_mp.png" alt="">
+
+  <div class="version footer-title">ТОША ЛЕГЕНДА · v1.0 · ГИБРИД A+D</div>
+  <div class="hint">↑ ↓ выбрать · ENTER подтвердить</div>
+
+<script type="module">
+  import { initMenu } from './menu.js';
+  initMenu({ axis: 'y' });
+  document.querySelectorAll('.mbtn').forEach((b) => b.addEventListener('click', () => {
+    b.classList.add('pressed');
+    setTimeout(() => b.classList.remove('pressed'), 180);
+  }));
+</script>
+</body>
+</html>

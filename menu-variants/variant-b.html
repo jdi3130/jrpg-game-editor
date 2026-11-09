@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вариант B — У костра</title>
+<link rel="stylesheet" href="shared/menu.css">
+<style>
+  .stage {
+    background-image: url('../public/assets/menu/bg_gate.png');
+    background-position: 30% center;
+  }
+
+  .title-wrap {
+    position: fixed;
+    top: 6vh;
+    left: 5vw;
+    z-index: 12;
+  }
+  .game-title { font-size: clamp(28px, 4vw, 46px); }
+  .tagline { font-size: 15px; margin-top: 14px; }
+
+  .hero {
+    --hero-h: 520px;
+    --hero-fps: 1.8s;
+    right: 7vw;
+    bottom: 6vh;
+    z-index: 8;
+  }
+
+  .menu-wrap {
+    position: fixed;
+    left: 5vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(430px, 92vw);
+    z-index: 14;
+  }
+  .menu-kicker {
+    font-family: 'Handjet', sans-serif;
+    font-size: 14px;
+    letter-spacing: 5px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-left: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="stage"></div>
+  <div class="hero" style="--hero-h:520px">
+    <div class="hero-shadow"></div>
+    <div class="hero-sprite" style="background-image:url('../public/assets/jrpg/hero/idle_left.png')"></div>
+  </div>
+  <div class="vignette"></div>
+  <div class="scanlines"></div>
+
+  <div class="boot" id="boot">
+    <div class="boot-inner">
+      <div class="boot-kicker">тёмное фэнтези · jrpg</div>
+      <div class="boot-logo">ТОША<br><span class="accent">ЛЕГЕНДА</span></div>
+      <div class="boot-rule"></div>
+      <div class="boot-sub">gate watch</div>
+      <div class="boot-bar"><i></i></div>
+      <div class="boot-press">ЗАГРУЗКА…</div>
+    </div>
+  </div>
+
+  <header class="title-wrap">
+    <div class="game-title">ТОША <span class="accent">ЛЕГЕНДА</span></div>
+    <div class="tagline">врата · ночь · дорога</div>
+  </header>
+
+  <main class="menu-shell">
+    <div class="menu-wrap">
+      <div class="menu-kicker">главное меню</div>
+      <nav class="menu-panel">
+        <button class="mbtn menu-item" id="newGame" style="--i:0">НАЧАТЬ ПУТЬ<small>новая игра</small></button>
+        <button class="mbtn menu-item" id="continueGame" style="--i:1">ПРОДОЛЖИТЬ<small>последний привал</small></button>
+        <button class="mbtn menu-item" style="--i:2">ЛАГЕРЬ<small>герои · предметы</small></button>
+        <button class="mbtn menu-item" style="--i:3">КАРТА МИРА<small>биомы · локации</small></button>
+        <button class="mbtn menu-item" style="--i:4">НАСТРОЙКИ</button>
+        <button class="mbtn menu-item" style="--i:5">ВЫХОД</button>
+      </nav>
+    </div>
+  </main>
+
+  <div class="version">PC JRPG · MENU B · v0.1</div>
+  <div class="hint">↑ ↓ выбрать · ENTER подтвердить</div>
+
+<script type="module">
+  import { initBoot, initMenuNav } from './shared/menu.js';
+  initBoot();
+  initMenuNav({ axis: 'y' });
+
+  const openVillage = () => { location.href = '../game/village.html'; };
+  document.getElementById('newGame')?.addEventListener('click', openVillage);
+  document.getElementById('continueGame')?.addEventListener('click', openVillage);
+  document.querySelectorAll('.mbtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      btn.classList.add('pressed');
+      setTimeout(() => btn.classList.remove('pressed'), 180);
+    });
+  });
+</script>
+</body>
+</html>

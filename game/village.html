@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Деревня — PC JRPG</title>
+<link rel="stylesheet" href="village.css">
+</head>
+<body>
+  <div id="game-wrap">
+    <canvas id="game" width="1344" height="864"></canvas>
+
+    <div id="hud">
+      <div class="hud-left">
+        <div class="hud-area">ДЕРЕВНЯ</div>
+        <div class="hud-sub">безопасная зона</div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-gold"><span id="goldValue">250</span> золота</div>
+        <div class="hud-inv" id="invValue">предметов: 0</div>
+      </div>
+    </div>
+
+    <a id="back" href="../menu-variants/variant-b.html">← Меню</a>
+    <a id="editor" href="../editor/map-editor.html">Редактор</a>
+    <div id="prompt" class="hidden"></div>
+    <div id="toast" class="hidden"></div>
+
+    <div id="panel" class="hidden">
+      <div id="panel-box">
+        <div id="panel-title"></div>
+        <div id="panel-body"></div>
+        <button id="panel-close" class="px-btn">ЗАКРЫТЬ</button>
+      </div>
+    </div>
+  </div>
+<script type="module" src="village.js"></script>
+</body>
+</html>
